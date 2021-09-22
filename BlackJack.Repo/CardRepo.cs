@@ -10,7 +10,6 @@ namespace BlackJackRepo
     {
         Random rando = new Random();
         List<Card> _deck = new List<Card>();
-        List<Card> _discard = new List<Card>();
         List<Card> _playerHand = new List<Card>();
         List<Card> _dealerHand = new List<Card>();
 
@@ -27,51 +26,40 @@ namespace BlackJackRepo
         {
             return _deck;
         }
-        public void DiscardHand(List<Card> hand)
-        {
-            foreach(Card card in hand)
-            {
-                    _discard.Add(card);
-            }
-            hand.Clear();
-        }
         public void DiscardBothHands()
         {
-            DiscardHand(_playerHand);
-            DiscardHand(_dealerHand);
+            _playerHand.Clear();
+            _dealerHand.Clear();
         }
-        public List<Card> CreateDeck() //Change suits to int and make ONE loop
+        public bool CreateDeck() //Change suits to int and make ONE loop
         {
-            for(int i = 1; i <= 13; i++)
+            if (_deck.Count < 15)
             {
-                Card card = new Card(i, "Clubs");
-                _deck.Add(card);
-            }
-            for(int i = 1; i <= 13; i++)
-            {
-                Card card = new Card(i, "Hearts");
-                _deck.Add(card);
-            }
-            for (int i = 1; i <= 13; i++)
-            {
-                Card card = new Card(i, "Spades");
-                _deck.Add(card);
+                _deck.Clear();
+                for (int i = 1; i <= 13; i++)
+                {
+                    Card card = new Card(i, "Clubs");
+                    _deck.Add(card);
+                }
+                for (int i = 1; i <= 13; i++)
+                {
+                    Card card = new Card(i, "Hearts");
+                    _deck.Add(card);
+                }
+                for (int i = 1; i <= 13; i++)
+                {
+                    Card card = new Card(i, "Spades");
+                    _deck.Add(card);
 
+                }
+                for (int i = 1; i <= 13; i++)
+                {
+                    Card card = new Card(i, "Diamonds");
+                    _deck.Add(card);
+                }
+                return true;
             }
-            for (int i = 1; i <= 13; i++)
-            {
-                Card card = new Card(i, "Diamonds");
-                _deck.Add(card);
-            }
-            return _deck;
-        }
-        public void Reshuffle()
-        {
-            foreach(Card card in _discard)
-            {
-                _discard.Remove(card);
-                _deck.Add(card);
-            }
+            return false;
         }
         public Card DrawACard()
         {
@@ -106,10 +94,18 @@ namespace BlackJackRepo
         }//2 methods???
         public int ScoreHand(List<Card> hand)
         {
-            int score = 0;
-            foreach(Card card in hand)
+            int score = ScoreCards(hand);
+            bool hasAce = false;
+            if(score < 12)
             {
-                score += ScoreCard(card);
+                foreach(Card card in hand)
+                {
+                    if(card.Value == 1) { hasAce = true; }
+                }
+                if(hasAce == true)
+                {
+                    score += 10;
+                }
             }
             return score;
         }
@@ -133,10 +129,6 @@ namespace BlackJackRepo
             if (ScoreHand(hand) == 21) { return "21"; }
             return null;
         }
-        //public string CompareHands(List<Card> player, List<Card> dealer)
-        //{
-        //    return (ScoreHand(player) > ScoreHand(dealer)) ? "player" : "dealer";
-        //}
         public bool DealerTurn()
         {
             
@@ -162,6 +154,15 @@ namespace BlackJackRepo
                     return false;
                 }
             }
+        }
+        public int ScoreCards(List<Card> hand)
+        {
+            int score = 0;
+            foreach (Card card in hand)
+            {
+                score += ScoreCard(card);
+            }
+            return score;
         }
     }
 }

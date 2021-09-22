@@ -16,10 +16,9 @@ namespace BlackJack.Console
         }
         public void MainMenu()
         {
-            System.Console.WriteLine("BlackJack Table\n\n" +
-                "Press 'Spacebar' to have a seat.\n" +
-                "Press any other key to exit.");
-            repo.CreateDeck();
+            System.Console.WriteLine("\n        BlackJack Table\n\n" +
+                "   Press 'Spacebar' to have a seat.\n" +
+                "   Press any other key to exit.");
             bool menuLoop = true;
             var keySwitch = System.Console.ReadKey().Key;
             while (menuLoop == true)
@@ -40,13 +39,15 @@ namespace BlackJack.Console
         }
         public void StartGame()
         {
+            bool newDeck = repo.CreateDeck();
+            if(newDeck == true) { System.Console.Beep(); }
             repo.DealOpen();
             DisplayPlayerScreen();
         }
         public void DisplayNav()
         {
             System.Console.Clear();
-            System.Console.WriteLine("                 BlackJack Table");
+            System.Console.WriteLine("              BlackJack Table");
             System.Console.WriteLine("         Spacebar = Hit   Enter = Stay"); //Split = Backspace
             System.Console.WriteLine("\n\n\n");
         } //add w/l
@@ -85,10 +86,6 @@ namespace BlackJack.Console
             System.Console.WriteLine("\n\n");
             DisplayDealerUnknown();
         }
-        public void MainMenuLoop(ConsoleKey keyPress)
-        {
-
-        }
         public void DisplayPlayerBust()
         {
             DisplayNav();
@@ -111,6 +108,9 @@ namespace BlackJack.Console
             string valueString;
             switch (value)
             {
+                case 1:
+                    valueString = "A";
+                    break;
                 case 11:
                     valueString = "J";
                     break;
